@@ -1,0 +1,69 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  labels:
+    app: database
+  name: database
+spec:
+  dataVolumeTemplates:
+  - apiVersion: cdi.kubevirt.io/v1beta1
+    kind: DataVolume
+    metadata:
+      name: database
+    spec:
+      source:
+        http:
+          url: http://s3.us-east.cloud-object-storage.appdomain.cloud/roadshowocpvirt/database.qcow2
+      storage:
+        resources:
+          requests:
+            storage: 16Gi
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: small
+        vm.kubevirt.io/os: centos9
+        vm.kubevirt.io/workload: server
+      labels:
+        kubevirt.io/domain: database
+        kubevirt.io/size: small
+    spec:
+      nodeSelector:
+        node.kubernetes.io/instance-type: m5zn.metal
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: rootdisk
+          interfaces:
+          - masquerade: {}
+            model: virtio
+            name: default
+          networkInterfaceMultiqueue: true
+          rng: {}
+        features:
+          smm:
+            enabled: true
+        firmware:
+          bootloader:
+            bios: {}
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: 2Gi
+      evictionStrategy: LiveMigrate
+      networks:
+      - name: default
+        pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+      - dataVolume:
+          name: database
+        name: rootdisk
