@@ -2,7 +2,7 @@
 
 ## Prerequisities
 
-1. OCP Cluster with Bare Metal Node (see [here](baremetal/aws.md) for AWS example)
+1. OCP Cluster with Bare Metal Node (see [here](https://github.com/theckang/mssql-ocp/blob/main/virt/README.md#bare-metal-machine) for AWS example)
 2. [helm](https://helm.sh/docs/intro/install/)
 3. [virtctl](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/getting-started#installing-virtctl_virt-using-the-cli-tools)
 
