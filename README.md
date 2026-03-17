@@ -2,7 +2,7 @@
 
 ## Prerequisities
 
-1. OCP Cluster
+1. OCP Cluster with Bare Metal Node (see [here](baremetal/aws.md) for AWS example)
 2. [helm](https://helm.sh/docs/intro/install/)
 3. [virtctl](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/getting-started#installing-virtctl_virt-using-the-cli-tools)
 
@@ -11,10 +11,14 @@
 1. Create namespace
 
 ```bash
-oc create project vault
+oc new-project vault
 ```
 
 2. Install Vault
+
+```bash
+helm repo add hashicorp https://helm.releases.hashicorp.com
+```
 
 ```bash
 helm install vault hashicorp/vault \
@@ -26,30 +30,6 @@ helm install vault hashicorp/vault \
 ```
 
 ## Virt PKI
-
-### Bare Metal Machine
-
-1. Make a copy of existing MachineSet configuration:
-
-```bash
-MACHINESET=$(oc get machineset -n openshift-machine-api -o jsonpath='{.items[0].metadata.name}')
-oc get machineset $MACHINESET -n openshift-machine-api -o yaml > scratch/baremetal-machineset.yaml
-```
-
-2. Edit `scratch/baremetal-machineset.yaml`
-
-  - [ ] Delete `creationTimestamp`, `generation`, `resourceVersion`, `uid`
-  - [ ] Set `.metadata.name` to `baremetal-machineset`
-  - [ ] Set `.spec.replicas` to `1`
-  - [ ] Set `.spec.selector.matchLabels["machine.openshift.io/cluster-api-machineset"]` to `baremetal-machineset`
-  - [ ] Set `.spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"]` to `baremetal-machineset`
-  - [ ] Set `.spec.template.spec.providerSpec.value.instanceType` to `m5zn.metal`
-
-3. Create bare metal machine
-
-```bash
-oc create -f scratch/baremetal-machineset.yaml
-```
 
 ### OpenShift Virtualization
 
