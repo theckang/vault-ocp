@@ -121,8 +121,16 @@ oc create -n virtapps -f virt/winweb-svc.yaml
 oc create -n virtapps -f virt/winweb-route.yaml
 ```
 
-### Configure PKI for edge terminated ingress
+6. Test web app
 
-### Configure PKI for passthrough ingress
+```bash
+WINWEB_URL=https://$(oc get route winweb -o jsonpath='{.spec.host}')
+curl $WINWEB_URL
+```
+
+### Configure PKI with Vault
+
+> TODO
+
 
 
