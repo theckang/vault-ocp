@@ -29,8 +29,6 @@ spec:
         kubevirt.io/domain: database
         kubevirt.io/size: small
     spec:
-      nodeSelector:
-        node.kubernetes.io/instance-type: m5zn.metal
       domain:
         cpu:
           cores: 1
